@@ -14,11 +14,11 @@ Internet
 Tailscale network
    │
 ┌──▼──────────────────────────────────────────┐
-│                    Caddy                     │  reverse proxy, TLS termination
+│                    Caddy                    │  reverse proxy, TLS termination
 └──┬────────────────────────────────────────┬──┘
    │                                        │
 ┌──▼──────┐                          ┌──────▼───┐
-│ Authelia │◄── OIDC / forward_auth ─┤ Services │
+│ Authelia│◄── OIDC / forward_auth ─┤ Services │
 └─────────┘                          └──────────┘
 ```
 
