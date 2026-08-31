@@ -1,0 +1,25 @@
+# .NET build artifacts
+bin/
+obj/
+
+# Real secrets
+appsettings.json
+appsettings.*.json
+!appsettings.json.example
+
+# Authelia runtime/sensitive files
+users_database.yml
+db.sqlite3
+*.pem
+jwt_secret
+session_secret
+storage_encryption_key
+notification.txt
+
+# TLS certificates
+*.crt
+*.key
+
+# OS/editor cruft
+.DS_Store
+*.swp

@@ -1,0 +1,60 @@
+services:
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SERVER_ROOT_URL=https://your-domain.example.com/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_AUTH_GENERIC_OAUTH_ENABLED=true
+      - GF_AUTH_GENERIC_OAUTH_NAME=Authelia
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=grafana
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=YOUR-OAUTH-CLIENT-SECRET
+      - GF_AUTH_GENERIC_OAUTH_SCOPES=openid profile email groups
+      - GF_AUTH_GENERIC_OAUTH_AUTH_URL=https://your-domain.example.com/authelia/api/oidc/authorization
+      - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=https://your-domain.example.com/authelia/api/oidc/token
+      - GF_AUTH_GENERIC_OAUTH_API_URL=https://your-domain.example.com/authelia/api/oidc/userinfo
+      - GF_AUTH_GENERIC_OAUTH_USE_PKCE=true
+    networks:
+      - default
+      - loki_default
+      - authelia_default
+    extra_hosts:
+      - "your-domain.example.com:172.17.0.1"
+
+volumes:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  loki_default:
+    external: true
+  authelia_default:
+    external: true

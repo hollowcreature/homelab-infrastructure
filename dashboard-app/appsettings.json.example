@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=your-postgres-host;Port=5432;Database=dashboard;Username=youruser;Password=yourpassword"
+  }
+}

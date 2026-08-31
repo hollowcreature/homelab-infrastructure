@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Homelab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body
+    class="bg-gradient-to-br from-gray-950 via-gray-900 to-slate-900 text-gray-100 min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
+
+    <div class="absolute inset-0 opacity-20"
+        style="background-image: radial-gradient(circle at 20% 30%, rgba(59,130,246,0.3), transparent 40%), radial-gradient(circle at 80% 70%, rgba(168,85,247,0.3), transparent 40%);">
+    </div>
+
+    <div class="relative text-center max-w-lg w-full">
+        <p id="datetime" class="text-sm text-gray-500 mb-1 tracking-wide uppercase"></p>
+        <h1 id="greeting"
+            class="text-4xl font-bold mb-10 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+            Hello</h1>
+
+        <div class="flex justify-center gap-4 mb-8 flex-wrap sm:flex-nowrap">
+            <div
+                class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6 hover:bg-white/10 transition flex flex-col items-center justify-center text-center flex-shrink-0">
+                <p id="weather-icon" class="text-3xl mb-2">🌤️</p>
+                <p id="weather" class="text-xl font-semibold">--</p>
+                <p id="weather-label" class="text-xs text-gray-500 mt-1">Loading...</p>
+            </div>
+
+            <div
+                class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6 hover:bg-white/10 transition flex flex-col items-center justify-center text-center flex-shrink-0">
+                <p class="text-3xl mb-2">📖</p>
+                <p class="text-xs text-gray-500 mb-1">Word of the Day</p>
+                <p id="word" class="font-semibold text-lg whitespace-nowrap"></p>
+                <p id="word-meaning" class="text-gray-400 text-sm mt-1 whitespace-nowrap"></p>
+            </div>
+        </div>
+
+        <div id="quick-services" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+            <!-- populated by home.js -->
+        </div>
+
+        <a href="dashboard.html"
+            class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-8 py-3 rounded-full font-medium shadow-lg shadow-blue-500/20 transition">
+            View Services
+            <span>→</span>
+        </a>
+    </div>
+
+    <script src="home.js"></script>
+</body>
+
+</html>

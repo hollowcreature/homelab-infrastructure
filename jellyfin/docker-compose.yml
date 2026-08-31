@@ -1,0 +1,12 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    volumes:
+      - ./config:/config
+      - /home/YOUR_USERNAME/nextcloud-files/media/movies:/media/movies:ro
+    ports:
+      - "8096:8096"
+    extra_hosts:
+      - "your-domain.example.com:172.17.0.1"

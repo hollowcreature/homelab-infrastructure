@@ -1,0 +1,96 @@
+{
+    debug
+}
+
+your-domain.example.com {
+    tls /etc/caddy/certs/your-domain.example.com.crt /etc/caddy/certs/your-domain.example.com.key
+
+    handle /vault/* {
+        forward_auth authelia:9091 {
+            uri /api/authz/forward-auth?authelia_url=https://your-domain.example.com/authelia/
+            copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+        }
+        reverse_proxy vaultwarden:80
+    }
+
+    redir /jellyfin /jellyfin/
+    handle /jellyfin/* {
+        forward_auth authelia:9091 {
+            uri /api/authz/forward-auth-jellyfin?authelia_url=https://your-domain.example.com/authelia/
+            copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+        }
+    reverse_proxy jellyfin:8096
+    }
+
+    handle /jellyfin-health/* {
+        forward_auth authelia:9091 {
+            uri /api/authz/forward-auth?authelia_url=https://your-domain.example.com/authelia/
+            copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+        }
+        handle_path /jellyfin-health/* {
+            reverse_proxy jellyfin:8096
+        }
+    }
+
+    @authelia path /authelia /authelia/*
+    handle @authelia {
+	reverse_proxy authelia:9091
+    }
+
+    handle /grafana/* {
+	forward_auth authelia:9091 {
+	    uri /api/authz/forward-auth?authelia_url=https://your-domain.example.com/authelia/
+	    copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+	}
+	reverse_proxy grafana:3000
+    }
+
+    handle /gitea/* {
+
+        forward_auth authelia:9091 {
+            uri /api/authz/forward-auth?authelia_url=https://your-domain.example.com/authelia/
+            copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+        }
+    }
+    handle_path /gitea/* {
+	reverse_proxy gitea:3000
+    }
+
+    handle_path /nextcloud/* {
+	reverse_proxy nextcloud:80
+    }
+
+    handle /dashboard/* {
+    forward_auth authelia:9091 {
+        uri /api/authz/forward-auth?authelia_url=https://your-domain.example.com/authelia/
+        copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+    }
+    handle_path /dashboard/* {
+        reverse_proxy dashboard-app:8080
+    }
+}
+}
+
+your-domain.example.com:8444 {
+    tls /etc/caddy/certs/your-domain.example.com.crt /etc/caddy/certs/your-domain.example.com.key
+
+    forward_auth authelia:9091 {
+        uri /api/authz/forward-auth?authelia_url=https://your-domain.example.com/authelia/
+        copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+    }
+
+    reverse_proxy firefly:8080 {
+	header_up X-Forwarded-Proto https
+    }
+}
+
+your-domain.example.com:8445 {
+    tls /etc/caddy/certs/your-domain.example.com.crt /etc/caddy/certs/your-domain.example.com.key
+
+    forward_auth authelia:9091 {
+        uri /api/authz/forward-auth?authelia_url=https://your-domain.example.com/authelia/
+        copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+    }
+
+    reverse_proxy pihole:80
+}

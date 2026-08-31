@@ -1,0 +1,22 @@
+services:
+  dashboard-app:
+    build: .
+    container_name: dashboard-app
+    restart: unless-stopped
+    ports:
+      - "8446:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=dashboard-postgres;Port=5432;Database=dashboard;Username=dashboarduser;Password=changeme
+      - Authelia__ClientSecret=YOUR-CLIENT-SECRET
+    networks:
+      - default
+      - dashboard-db_default
+      - authelia_default
+    extra_hosts:
+      - "your-domain.example.com:172.17.0.1"
+
+networks:
+  dashboard-db_default:
+    external: true
+  authelia_default:
+    external: true

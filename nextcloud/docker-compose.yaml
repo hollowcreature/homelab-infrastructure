@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mariadb:11
+    container_name: nextcloud-db
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=ROW
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=changeme
+      - MYSQL_PASSWORD=changeme
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  app:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    links:
+      - db
+    volumes:
+      - nc-data:/var/www/html
+      - ./ssl-cafile.ini:/usr/local/etc/php/conf.d/ssl-cafile.ini:ro
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_PASSWORD=changeme
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+    depends_on:
+      - db
+    extra_hosts:
+      - "your-domain.example.com:172.17.0.1"
+
+volumes:
+  db-data:
+  nc-data:

@@ -1,0 +1,43 @@
+services:
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "8444:8444"
+      - "8445:8445"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - .:/etc/caddy/certs
+    networks:
+      - default
+      - vaultwarden_default
+      - firefly_default
+      - jellyfin_default
+      - authelia_default
+      - monitoring_default
+      - gitea_default
+      - nextcloud_default
+      - pihole_default
+      - dashboard-app_default
+
+networks:
+  vaultwarden_default:
+    external: true
+  firefly_default:
+    external: true
+  jellyfin_default:
+    external: true
+  authelia_default:
+    external: true
+  monitoring_default:
+    external: true
+  gitea_default:
+    external: true
+  nextcloud_default:
+    external: true
+  pihole_default:
+    external: true
+  dashboard-app_default:
+    external: true

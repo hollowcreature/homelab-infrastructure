@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Homelab Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-gray-100 min-h-screen p-8">
+    <h1 class="text-3x1 font-bold mb-6">Homelab Dashboard</h1>
+
+    <form id="add-service-form" class="mb-6 bg-gray-800 p-4 rounded-lg flex gap-2 flex-wrap">
+        <input type="text" id="input-name" placeholder="Name" required
+            class="bg-gray-700 text-gray-100 px-3 py-2 rounded flex-1 min-w-[120px]">
+        <input type="url" id="input-url" placeholder="URL" required
+            class="bg-gray-700 text-gray-100 px-3 py-2 rounded flex-1 min-w-[180px]">
+        <input type="text" id="input-description" placeholder="Description"
+            class="bg-gray-700 text-gray-100 px-3 py-2 rounded flex-1 min-w-[150px]">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded font-medium"> Add
+            Service </button>
+    </form>
+
+    <div id="services" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- service cards -->
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

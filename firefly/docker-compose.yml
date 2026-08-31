@@ -1,0 +1,42 @@
+services:
+  firefly-db:
+    image: mariadb:11
+    container_name: firefly-db
+    restart: unless-stopped
+    volumes:
+      - firefly-db-data:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=firefly
+      - MYSQL_USER=firefly
+      - MYSQL_PASSWORD=changeme
+
+  firefly:
+    image: fireflyiii/core:latest
+    container_name: firefly
+    restart: unless-stopped
+    volumes:
+      - firefly-upload:/var/www/html/storage/upload
+    environment:
+      # Generate with: docker run --rm fireflyiii/core:latest artisan key:generate --show
+      # Or: echo "base64:$(openssl rand -base64 32)"
+      - APP_KEY=YOUR-APP-KEY
+      - DB_CONNECTION=mysql
+      - DB_HOST=firefly-db
+      - DB_PORT=3306
+      - DB_DATABASE=firefly
+      - DB_USERNAME=firefly
+      - DB_PASSWORD=changeme
+      - APP_URL=https://your-domain.example.com:8444
+      - TRUSTED_PROXIES=*
+      - AUTHENTICATION_GUARD=remote_user_guard
+      - AUTHENTICATION_GUARD_HEADER=HTTP_REMOTE_USER
+      - AUTHENTICATION_GUARD_EMAIL=HTTP_REMOTE_EMAIL
+    ports:
+      - "8083:8080"
+    depends_on:
+      - firefly-db
+
+volumes:
+  firefly-db-data:
+  firefly-upload:

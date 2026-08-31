@@ -1,0 +1,24 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      - WEBSOCKET_ENABLED=true
+      - DOMAIN=https://your-domain.example.com/vault
+      - SIGNUPS_ALLOWED=false
+      - SSO_ENABLED=true
+      - SSO_ONLY=false
+      - SSO_AUTHORITY=https://your-domain.example.com/authelia
+      - SSO_SCOPES=profile email offline_access
+      - SSO_PKCE=true
+      - SSO_CLIENT_ID=vaultwarden
+      - SSO_CLIENT_SECRET=YOUR-CLIENT-SECRET
+      - SSO_ALLOW_UNKNOWN_EMAIL_VERIFICATION=false
+      - SSO_SIGNUPS_MATCH_EMAIL=true
+    volumes:
+      - ./data:/data
+    ports:
+      - "8082:80"
+    extra_hosts:
+      - "your-domain.example.com:172.17.0.1"
