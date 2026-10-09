@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - run: dotnet restore dashboard-app/DashboardApi.csproj
+      - run: dotnet build dashboard-app/DashboardApi.csproj --no-restore -c Release
+      - run: docker build -f dashboard-app/dockerfile -t dashboard-app dashboard-app/
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose files
+        run: |
+          fail=0
+          for f in $(find . -name 'docker-compose.y*ml' -not -path './.git/*'); do
+            d=$(dirname "$f")
+            touch "$d/.env"
+            echo "== $f"
+            docker compose -f "$f" config -q || fail=1
+          done
+          exit $fail
+
+  caddy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker run --rm -v "$PWD/caddy:/etc/caddy" caddy:latest caddy adapt --config /etc/caddy/Caddyfile > /dev/null
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
